@@ -2,28 +2,22 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CheckoutRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()?->role === 'customer';
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'recipient_name' => ['required', 'max:120'],
+            'phone' => ['required', 'max:30'],
+            'address' => ['required', 'string', 'max:1000'],
+            'shipping_service_id' => ['required', 'exists:shipping_services,id'],
         ];
     }
 }
